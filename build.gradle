@@ -84,6 +84,8 @@ ext.libraries = [
     conscrypt: 'org.conscrypt:conscrypt-openjdk-uber:2.5.2',
     d2: "com.linkedin.pegasus:d2:${pegasusVersion}",
     duckdbJdbc: "org.duckdb:duckdb_jdbc:1.2.0",
+    elasticsearchJava: 'co.elastic.clients:elasticsearch-java:8.11.0',
+    elasticsearchRestClient: 'org.elasticsearch.client:elasticsearch-rest-client:8.11.0',
     failsafe: 'net.jodah:failsafe:2.4.0',
     fastUtil: 'it.unimi.dsi:fastutil:8.3.0',
     grpcNettyShaded: "io.grpc:grpc-netty-shaded:${grpcVersion}",
@@ -144,6 +146,7 @@ ext.libraries = [
     spotbugs: 'com.github.spotbugs:spotbugs:4.5.2',
     tehuti: 'io.tehuti:tehuti:0.12.4',
     testcontainers: 'org.testcontainers:testcontainers:1.18.0',
+    testcontainersElasticsearch: 'org.testcontainers:elasticsearch:1.18.0',
     testng: 'org.testng:testng:6.14.3',
     tomcatAnnotations: 'org.apache.tomcat:annotations-api:6.0.53',
     // Resolves java.lang.UnsupportedOperationException:  setXIncludeAware is not supported on this JAXP implementation
