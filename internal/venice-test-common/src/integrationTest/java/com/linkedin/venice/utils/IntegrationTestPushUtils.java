@@ -45,6 +45,9 @@ import com.linkedin.venice.controllerapi.UpdateStoreQueryParams;
 import com.linkedin.venice.d2.D2ClientFactory;
 import com.linkedin.venice.endToEnd.DaVinciClientDiskFullTest;
 import com.linkedin.venice.exceptions.VeniceException;
+import com.linkedin.venice.flink.FlinkVeniceSink;
+import com.linkedin.venice.flink.FlinkVeniceSinkFactory;
+import com.linkedin.venice.flink.VeniceRecord;
 import com.linkedin.venice.hadoop.VenicePushJob;
 import com.linkedin.venice.helix.VeniceJsonSerializer;
 import com.linkedin.venice.integration.utils.KafkaTestUtils;
@@ -356,6 +359,93 @@ public class IntegrationTestPushUtils {
     VeniceSystemProducer veniceProducer = factory.getClosableProducer("venice", new MapConfig(samzaConfig), null);
     veniceProducer.start();
     return veniceProducer;
+  }
+
+  /**
+   * Get Flink producer configuration for single-region setup.
+   */
+  public static Properties getFlinkProducerConfig(
+      VeniceClusterWrapper venice,
+      String storeName,
+      Version.PushType type) {
+    Properties flinkConfig = new Properties();
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_PUSH_TYPE, type.toString());
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_STORE, storeName);
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_CHILD_D2_ZK_HOSTS, venice.getZk().getAddress());
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_CHILD_CONTROLLER_D2_SERVICE, D2_SERVICE_NAME);
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_PARENT_D2_ZK_HOSTS, "invalid_parent_zk_address");
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.VENICE_PARENT_CONTROLLER_D2_SERVICE, PARENT_D2_SERVICE_NAME);
+    flinkConfig.setProperty(FlinkVeniceSinkFactory.DEPLOYMENT_ID, Utils.getUniqueString("venice-flink-push-id"));
+    flinkConfig.setProperty(SSL_ENABLED, "false");
+    flinkConfig.putAll(
+        PubSubBrokerWrapper.getBrokerDetailsForClients(Collections.singletonList(venice.getPubSubBrokerWrapper())));
+    return flinkConfig;
+  }
+
+  /**
+   * Create Flink Producer (FlinkVeniceSink) in Single-Region setup.
+   */
+  public static FlinkVeniceSink getFlinkProducer(VeniceClusterWrapper venice, String storeName, Version.PushType type) {
+    Properties flinkConfig = getFlinkProducerConfig(venice, storeName, type);
+    FlinkVeniceSinkFactory factory = new FlinkVeniceSinkFactory();
+    FlinkVeniceSink flinkSink = factory.createSink(flinkConfig);
+    flinkSink.start();
+    return flinkSink;
+  }
+
+  /**
+   * Create Flink Producer (FlinkVeniceSink) with optional configs.
+   */
+  public static FlinkVeniceSink getFlinkProducer(
+      VeniceClusterWrapper venice,
+      String storeName,
+      Version.PushType type,
+      Properties optionalConfigs) {
+    Properties flinkConfig = getFlinkProducerConfig(venice, storeName, type);
+    if (optionalConfigs != null) {
+      flinkConfig.putAll(optionalConfigs);
+    }
+    FlinkVeniceSinkFactory factory = new FlinkVeniceSinkFactory();
+    FlinkVeniceSink flinkSink = factory.createSink(flinkConfig);
+    flinkSink.start();
+    return flinkSink;
+  }
+
+  /**
+   * Send a record using Flink producer.
+   */
+  public static void sendFlinkRecord(FlinkVeniceSink flinkSink, Object key, Object value) {
+    try {
+      flinkSink.invoke(new VeniceRecord(key, value), null);
+    } catch (Exception e) {
+      throw new VeniceException("Failed to send Flink record", e);
+    }
+  }
+
+  /**
+   * Send a delete record using Flink producer.
+   */
+  public static void sendFlinkDeleteRecord(FlinkVeniceSink flinkSink, Object key) {
+    try {
+      flinkSink.invoke(VeniceRecord.delete(key), null);
+    } catch (Exception e) {
+      throw new VeniceException("Failed to send Flink delete record", e);
+    }
+  }
+
+  /**
+   * Send a record with logical timestamp using Flink producer.
+   */
+  public static void sendFlinkRecordWithTimestamp(
+      FlinkVeniceSink flinkSink,
+      Object key,
+      Object value,
+      long logicalTimestamp) {
+    try {
+      flinkSink.invoke(new VeniceRecord(key, value, logicalTimestamp), null);
+    } catch (Exception e) {
+      throw new VeniceException("Failed to send Flink record with timestamp", e);
+    }
   }
 
   public static String getKeySchemaString(Schema recordSchema, Properties props) {
