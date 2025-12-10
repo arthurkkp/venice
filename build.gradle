@@ -56,6 +56,7 @@ def apacheSparkVersion = '3.3.3'
 def antlrVersion = '4.8'
 def scala = '2.12'
 def openTelemetryVersion = '1.47.0'
+def flinkVersion = '1.18.1'
 
 ext.libraries = [
     alpnAgent: "org.mortbay.jetty.alpn:jetty-alpn-agent:${alpnAgentVersion}",
@@ -86,6 +87,8 @@ ext.libraries = [
     duckdbJdbc: "org.duckdb:duckdb_jdbc:1.2.0",
     failsafe: 'net.jodah:failsafe:2.4.0',
     fastUtil: 'it.unimi.dsi:fastutil:8.3.0',
+    flinkStreamingJava: "org.apache.flink:flink-streaming-java:${flinkVersion}",
+    flinkConnectorBase: "org.apache.flink:flink-connector-base:${flinkVersion}",
     grpcNettyShaded: "io.grpc:grpc-netty-shaded:${grpcVersion}",
     grpcProtobuf: "io.grpc:grpc-protobuf:${grpcVersion}",
     grpcServices: "io.grpc:grpc-services:${grpcVersion}",

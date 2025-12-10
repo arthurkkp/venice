@@ -140,6 +140,12 @@
         <Field name="topicName"/>
         <Field name="kafkaBootstrapServers"/>
       </Class>
+      <Class name="com.linkedin.venice.flink.FlinkVeniceSink">
+        <Field name="isWriteComputeEnabled"/>
+        <Field name="primaryControllerColoD2Client"/>
+        <Field name="topicName"/>
+        <Field name="kafkaBootstrapServers"/>
+      </Class>
       <Class name="com.linkedin.venice.hadoop.VenicePushJob">
         <Field name="veniceWriter"/>
       </Class>
@@ -210,6 +216,13 @@
       <Class name="com.linkedin.venice.serialization.avro.AvroProtocolDefinition">
         <Field name="currentProtocolVersion"/>
         <Field name="magicByte"/>
+      </Class>
+      <Class name="com.linkedin.venice.flink.FlinkVeniceSink">
+        <Field name="sslFactory"/>
+        <Field name="controllerClient"/>
+        <Field name="schemaFetcher"/>
+        <Field name="veniceWriter"/>
+        <Field name="transportClient"/>
       </Class>
     </Or>
   </Match>

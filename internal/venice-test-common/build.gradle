@@ -68,6 +68,7 @@ dependencies {
   implementation project(':services:venice-controller')
   implementation project(':services:venice-router')
   implementation project(':integrations:venice-samza')
+  implementation project(':integrations:venice-flink')
   implementation project(':clients:venice-producer')
   implementation project(':internal:venice-client-common')
   implementation project(':services:venice-server')
@@ -106,6 +107,7 @@ dependencies {
   implementation libraries.mockito
   implementation libraries.rocksdbjni
   implementation libraries.samzaApi
+  implementation libraries.flinkStreamingJava
   implementation libraries.spark
   implementation libraries.testng
   implementation libraries.zstd
