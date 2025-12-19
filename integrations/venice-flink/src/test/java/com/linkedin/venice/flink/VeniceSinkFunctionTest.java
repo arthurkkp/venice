@@ -547,4 +547,423 @@ public class VeniceSinkFunctionTest {
     verify(mockWriter).close();
     verify(mockControllerClient).close();
   }
+
+  @Test
+  public void testSendWithLongKey() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<Long, String> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"long\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    SchemaResponse valueSchemaResponse = new SchemaResponse();
+    valueSchemaResponse.setId(1);
+    valueSchemaResponse.setDerivedSchemaId(-1);
+    when(mockControllerClient.getValueOrDerivedSchemaId(anyString(), anyString())).thenReturn(valueSchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    future.complete(null);
+    when(mockWriter.put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any())).thenReturn(future);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    CompletableFuture<Void> result = sinkFunction.send(123456789L, "testValue");
+    assertNotNull(result);
+
+    verify(mockWriter).put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any());
+  }
+
+  @Test
+  public void testSendWithDoubleKey() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<Double, String> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"double\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    SchemaResponse valueSchemaResponse = new SchemaResponse();
+    valueSchemaResponse.setId(1);
+    valueSchemaResponse.setDerivedSchemaId(-1);
+    when(mockControllerClient.getValueOrDerivedSchemaId(anyString(), anyString())).thenReturn(valueSchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    future.complete(null);
+    when(mockWriter.put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any())).thenReturn(future);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    CompletableFuture<Void> result = sinkFunction.send(3.14159, "testValue");
+    assertNotNull(result);
+
+    verify(mockWriter).put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any());
+  }
+
+  @Test
+  public void testSendWithFloatKey() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<Float, String> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"float\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    SchemaResponse valueSchemaResponse = new SchemaResponse();
+    valueSchemaResponse.setId(1);
+    valueSchemaResponse.setDerivedSchemaId(-1);
+    when(mockControllerClient.getValueOrDerivedSchemaId(anyString(), anyString())).thenReturn(valueSchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    future.complete(null);
+    when(mockWriter.put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any())).thenReturn(future);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    CompletableFuture<Void> result = sinkFunction.send(2.71828f, "testValue");
+    assertNotNull(result);
+
+    verify(mockWriter).put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any());
+  }
+
+  @Test
+  public void testSendWithBooleanKey() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<Boolean, String> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"boolean\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    SchemaResponse valueSchemaResponse = new SchemaResponse();
+    valueSchemaResponse.setId(1);
+    valueSchemaResponse.setDerivedSchemaId(-1);
+    when(mockControllerClient.getValueOrDerivedSchemaId(anyString(), anyString())).thenReturn(valueSchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    future.complete(null);
+    when(mockWriter.put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any())).thenReturn(future);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    CompletableFuture<Void> result = sinkFunction.send(true, "testValue");
+    assertNotNull(result);
+
+    verify(mockWriter).put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any());
+  }
+
+  @Test
+  public void testSendWithBytesKey() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<byte[], String> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"bytes\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    SchemaResponse valueSchemaResponse = new SchemaResponse();
+    valueSchemaResponse.setId(1);
+    valueSchemaResponse.setDerivedSchemaId(-1);
+    when(mockControllerClient.getValueOrDerivedSchemaId(anyString(), anyString())).thenReturn(valueSchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    future.complete(null);
+    when(mockWriter.put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any())).thenReturn(future);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    CompletableFuture<Void> result = sinkFunction.send(new byte[] { 1, 2, 3 }, "testValue");
+    assertNotNull(result);
+
+    verify(mockWriter).put(any(byte[].class), any(byte[].class), anyInt(), anyLong(), any());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testInitializeStateWithRestoration() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    FunctionInitializationContext initContext = mock(FunctionInitializationContext.class);
+    OperatorStateStore stateStore = mock(OperatorStateStore.class);
+    ListState<Long> listState = mock(ListState.class);
+    when(initContext.getOperatorStateStore()).thenReturn(stateStore);
+    when(stateStore.getListState(any(ListStateDescriptor.class))).thenReturn(listState);
+    when(initContext.isRestored()).thenReturn(true);
+
+    java.util.List<Long> restoredValues = java.util.Arrays.asList(100L, 200L);
+    when(listState.get()).thenReturn(restoredValues);
+
+    sinkFunction.initializeState(initContext);
+
+    verify(stateStore).getListState(any(ListStateDescriptor.class));
+    verify(listState).get();
+  }
+
+  @Test
+  public void testControllerRequestWithRetryInterruptedException() throws InterruptedException {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    assertThrows(VeniceException.class, () -> sinkFunction.controllerRequestWithRetry(() -> {
+      throw new InterruptedException("Thread interrupted");
+    }, 2));
+  }
+
+  @Test
+  public void testControllerRequestWithRetrySuccessAfterFailure() throws InterruptedException {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    ControllerResponse errorResponse = mock(ControllerResponse.class);
+    when(errorResponse.isError()).thenReturn(true);
+    when(errorResponse.getError()).thenReturn("Temporary error");
+
+    ControllerResponse successResponse = mock(ControllerResponse.class);
+    when(successResponse.isError()).thenReturn(false);
+
+    java.util.concurrent.atomic.AtomicInteger callCount = new java.util.concurrent.atomic.AtomicInteger(0);
+
+    ControllerResponse result = sinkFunction.controllerRequestWithRetry(() -> {
+      if (callCount.incrementAndGet() == 1) {
+        return errorResponse;
+      }
+      return successResponse;
+    }, 3);
+
+    assertNotNull(result);
+    assertEquals(result, successResponse);
+    verify(mockTime, times(1)).sleep(anyLong());
+  }
+
+  @Test
+  public void testCloseWithNullWriter() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    sinkFunction.close();
+  }
+
+  @Test
+  public void testCloseWithNullControllerClient() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    sinkFunction.close();
+
+    verify(mockWriter).flush();
+    verify(mockWriter).close();
+  }
+
+  @Test
+  public void testGettersReturnCorrectValues() {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.BATCH,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    assertEquals(sinkFunction.getStoreName(), TEST_STORE);
+    assertEquals(sinkFunction.getPushType(), Version.PushType.BATCH);
+  }
+
+  @Test
+  public void testRefreshSchemaCacheWithMultipleSchemas() {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+
+    MultiSchemaResponse.Schema mockSchema1 = new MultiSchemaResponse.Schema();
+    mockSchema1.setSchemaStr("\"string\"");
+    mockSchema1.setId(1);
+    mockSchema1.setDerivedSchemaId(-1);
+
+    MultiSchemaResponse.Schema mockSchema2 = new MultiSchemaResponse.Schema();
+    mockSchema2.setSchemaStr("\"int\"");
+    mockSchema2.setId(2);
+    mockSchema2.setDerivedSchemaId(-1);
+
+    MultiSchemaResponse response = new MultiSchemaResponse();
+    response.setSchemas(new MultiSchemaResponse.Schema[] { mockSchema1, mockSchema2 });
+    when(mockControllerClient.getAllValueAndDerivedSchema(anyString())).thenReturn(response);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.refreshSchemaCache();
+
+    verify(mockControllerClient).getAllValueAndDerivedSchema(TEST_STORE);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSnapshotStateWithNullWriter() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, String> sinkFunction = new VeniceSinkFunction<>(
+        TEST_STORE,
+        TEST_CONTROLLER_URL,
+        Version.PushType.STREAM,
+        Optional.empty(),
+        Optional.empty(),
+        mockTime);
+
+    FunctionInitializationContext initContext = mock(FunctionInitializationContext.class);
+    OperatorStateStore stateStore = mock(OperatorStateStore.class);
+    ListState<Long> listState = mock(ListState.class);
+    when(initContext.getOperatorStateStore()).thenReturn(stateStore);
+    when(stateStore.getListState(any(ListStateDescriptor.class))).thenReturn(listState);
+    when(initContext.isRestored()).thenReturn(false);
+
+    sinkFunction.initializeState(initContext);
+
+    FunctionSnapshotContext snapshotContext = mock(FunctionSnapshotContext.class);
+    when(snapshotContext.getCheckpointId()).thenReturn(1L);
+
+    sinkFunction.snapshotState(snapshotContext);
+
+    verify(listState).clear();
+    verify(listState).add(0L);
+  }
+
+  @Test
+  public void testSendWithZeroTimestamp() throws Exception {
+    Time mockTime = mock(Time.class);
+    VeniceSinkFunction<String, VeniceObjectWithTimestamp<String>> sinkFunction = spy(
+        new VeniceSinkFunction<>(
+            TEST_STORE,
+            TEST_CONTROLLER_URL,
+            Version.PushType.STREAM,
+            Optional.empty(),
+            Optional.empty(),
+            mockTime));
+
+    ControllerClient mockControllerClient = mock(ControllerClient.class);
+    SchemaResponse keySchemaResponse = new SchemaResponse();
+    keySchemaResponse.setSchemaStr("\"string\"");
+    when(mockControllerClient.getKeySchema(anyString())).thenReturn(keySchemaResponse);
+
+    sinkFunction.setControllerClient(mockControllerClient);
+    sinkFunction.getKeySchema();
+
+    @SuppressWarnings("unchecked")
+    AbstractVeniceWriter<byte[], byte[], byte[]> mockWriter = mock(AbstractVeniceWriter.class);
+    sinkFunction.setVeniceWriter(mockWriter);
+
+    doReturn("test_store_rt").when(sinkFunction).getTopicName();
+
+    VeniceObjectWithTimestamp<String> valueWithZeroTimestamp = new VeniceObjectWithTimestamp<>("testValue", 0L);
+    assertThrows(VeniceException.class, () -> sinkFunction.send("testKey", valueWithZeroTimestamp));
+  }
 }
